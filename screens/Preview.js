@@ -1,16 +1,17 @@
 import React from 'react'
-import { View } from 'react-native'
-import { Text } from 'react-native-paper'
+import { useSelector } from 'react-redux'
+import { ScrollView } from 'react-native'
+
+import PreviewQuestionBlock from '../components/PreviewQuestionBlock'
 
 function Preview() {
+  const questions = useSelector((state) => state)
   return (
-    <View>
-      <Text>Preview</Text>
-      <Text>Preview</Text>
-      <Text>Preview</Text>
-      <Text>Preview</Text>
-      <Text>Preview</Text>
-    </View>
+    <ScrollView>
+      {questions.map((question) => (
+        <PreviewQuestionBlock key={question.id} {...question} />
+      ))}
+    </ScrollView>
   )
 }
 
