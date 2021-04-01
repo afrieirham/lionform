@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet, View } from 'react-native'
 import { Button, FAB, Portal, Text } from 'react-native-paper'
 
 import AddQuestionSheet from '../components/AddQuestionSheet'
+import QuestionBlock from '../components/QuestionBlock'
 
 function Builder({ navigation }) {
   const sheetRef = useRef(null)
@@ -14,9 +15,9 @@ function Builder({ navigation }) {
   return (
     <>
       <ScrollView>
-        <View style={{ marginHorizontal: 10 }}>
+        <View>
           {questions.map((question) => (
-            <Text key={question.id}>{question.text}</Text>
+            <QuestionBlock key={question.id} {...question} />
           ))}
         </View>
 
