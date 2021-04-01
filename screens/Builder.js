@@ -25,13 +25,13 @@ function Builder({ navigation }) {
           contentStyle={{ padding: 10 }}
           style={{ margin: 10 }}
           mode='contained'
-          onPress={() => navigation.navigate('Preview')}
+          onPress={() => sheetRef.current.snapTo(0)}
         >
-          Preview
+          Add Question
         </Button>
       </ScrollView>
       <Portal>
-        <FAB style={styles.fab} icon='plus' onPress={() => sheetRef.current.snapTo(0)} />
+        <FAB style={styles.fab} icon='eye' onPress={() => navigation.navigate('Preview')} />
       </Portal>
       <AddQuestionSheet sheetRef={sheetRef} />
     </>
