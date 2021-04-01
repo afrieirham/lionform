@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useForm, Controller } from 'react-hook-form'
 
 import { StyleSheet, View } from 'react-native'
-import { Button, TextInput, Title } from 'react-native-paper'
+import { Button, HelperText, TextInput, Title } from 'react-native-paper'
 import DropDown from 'react-native-paper-dropdown'
 
 import { addQuestion } from '../libs/redux'
@@ -10,24 +11,25 @@ import BottomSheetBehavior from 'reanimated-bottom-sheet'
 
 function AddQuestionSheet({ sheetRef }) {
   const dispatch = useDispatch()
-  const [text, setText] = useState('')
   const [type, setType] = useState('text')
 
   const [showDropDown, setShowDropDown] = useState(false)
+
+  const { control, handleSubmit, errors, setValue } = useForm()
 
   const questionTypeList = [
     { label: 'Text', value: 'text' },
     { label: 'Number', value: 'number' },
     { label: 'Boolean', value: 'boolean' },
-    { label: 'Checkboxes', value: 'checkboxes' },
+    { label: 'Checkbox', value: 'checkbox' },
   ]
 
-  const onAddQuestion = () => {
+  const onAddQuestion = ({ text }) => {
     // Close botton sheet
     sheetRef.current.snapTo(1)
 
     // Reset form
-    setText('')
+    setValue('text', '')
     setType('text')
 
     dispatch(addQuestion({ type, text }))
@@ -42,13 +44,26 @@ function AddQuestionSheet({ sheetRef }) {
       }}
     >
       <Title style={{ fontSize: 25, textAlign: 'center', marginBottom: 10 }}>Add Question</Title>
-      <TextInput
-        label='Question'
-        style={{ marginBottom: 10 }}
-        mode='outlined'
-        value={text}
-        onChangeText={(text) => setText(text)}
+
+      <Controller
+        control={control}
+        name='text'
+        rules={{ required: true }}
+        defaultValue=''
+        render={({ onChange, onBlur, value }) => (
+          <TextInput
+            label='Question'
+            mode='outlined'
+            value={value}
+            onBlur={onBlur}
+            onChangeText={(value) => onChange(value)}
+            error={Boolean(errors.text)}
+          />
+        )}
       />
+      <HelperText type='error' visible={Boolean(errors.text)}>
+        Question is required
+      </HelperText>
       <DropDown
         label='Type'
         mode='outlined'
@@ -66,8 +81,8 @@ function AddQuestionSheet({ sheetRef }) {
         icon='plus'
         mode='contained'
         contentStyle={{ padding: 10 }}
-        style={{ marginTop: 10 }}
-        onPress={onAddQuestion}
+        style={{ marginTop: 20 }}
+        onPress={handleSubmit(onAddQuestion)}
       >
         Add
       </Button>
