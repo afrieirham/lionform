@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Button, FAB, Portal, Text } from 'react-native-paper'
+import { Button, FAB, Portal } from 'react-native-paper'
 
+import ChuckNorrisJoke from '../components/ChuckNorrisJoke'
 import AddQuestionSheet from '../components/AddQuestionSheet'
 import QuestionBlock from '../components/QuestionBlock'
 import { clearQuestions } from '../libs/redux'
@@ -13,15 +14,20 @@ function Builder({ navigation }) {
   const dispatch = useDispatch()
 
   const questions = useSelector((state) => state)
+  const hasQuestions = Boolean(questions.length)
 
   return (
     <>
       <ScrollView>
-        <View>
-          {questions.map((question) => (
-            <QuestionBlock key={question.id} {...question} />
-          ))}
-        </View>
+        {hasQuestions ? (
+          <View>
+            {questions.map((question) => (
+              <QuestionBlock key={question.id} {...question} />
+            ))}
+          </View>
+        ) : (
+          <ChuckNorrisJoke />
+        )}
 
         <Button
           contentStyle={{ padding: 10 }}
@@ -31,15 +37,17 @@ function Builder({ navigation }) {
         >
           Add Question
         </Button>
-        {Boolean(questions.length) && (
+        {hasQuestions && (
           <Button style={{ margin: 10 }} onPress={() => dispatch(clearQuestions())}>
             Clear
           </Button>
         )}
       </ScrollView>
-      <Portal>
-        <FAB style={styles.fab} icon='eye' onPress={() => navigation.navigate('Preview')} />
-      </Portal>
+      {hasQuestions && (
+        <Portal>
+          <FAB style={styles.fab} icon='eye' onPress={() => navigation.navigate('Preview')} />
+        </Portal>
+      )}
       <AddQuestionSheet sheetRef={sheetRef} />
     </>
   )
