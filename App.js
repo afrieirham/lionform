@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { Provider as StoreProvider } from 'react-redux'
 
 import { StyleSheet } from 'react-native'
 import {
@@ -11,6 +12,7 @@ import {
   Text,
 } from 'react-native-paper'
 
+import { store } from './libs/redux'
 import Header from './components/Header'
 import Builder from './screens/Builder'
 import Preview from './screens/Preview'
@@ -30,19 +32,16 @@ function App() {
   })
 
   return (
-    <PaperProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName='Home'
-          screenOptions={{
-            header: (props) => <Header {...props} />,
-          }}
-        >
-          <Stack.Screen name='Builder' component={Builder} />
-          <Stack.Screen name='Preview' component={Preview} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <StoreProvider store={store}>
+      <PaperProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName='Home'>
+            <Stack.Screen name='Builder' component={Builder} />
+            <Stack.Screen name='Preview' component={Preview} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </StoreProvider>
   )
 }
 

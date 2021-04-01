@@ -1,53 +1,39 @@
-import React, { useState } from 'react'
+import React, { useRef } from 'react'
+import { useSelector } from 'react-redux'
+
 import { ScrollView, StyleSheet, View } from 'react-native'
-import { Button, FAB, Portal, Surface, Text } from 'react-native-paper'
-import FormBlock from '../components/FormBlock'
+import { Button, FAB, Portal, Text } from 'react-native-paper'
+
+import AddQuestionSheet from '../components/AddQuestionSheet'
 
 function Builder({ navigation }) {
-  const [open, setOpen] = useState(false)
-  const [questions, setQuestions] = useState([])
+  const sheetRef = useRef(null)
 
-  const removeQuestion = (id) => {
-    const newQuestionSet = questions.filter((question) => question.id !== id)
-    setQuestions(newQuestionSet)
-  }
+  const questions = useSelector((state) => state)
 
   return (
-    <ScrollView>
-      {questions.map((question) => (
-        <FormBlock key={question.id} {...question} removeQuestion={removeQuestion} />
-      ))}
+    <>
+      <ScrollView>
+        <View style={{ marginHorizontal: 10 }}>
+          {questions.map((question) => (
+            <Text key={question.id}>{question.text}</Text>
+          ))}
+        </View>
 
-      <Button
-        style={{ padding: 10, marginHorizontal: 10, marginVertical: 10 }}
-        mode='contained'
-        onPress={() =>
-          setQuestions([...questions, { id: Math.random(), type: 'text', question: '' }])
-        }
-      >
-        Add Question
-      </Button>
-
+        <Button
+          contentStyle={{ padding: 10 }}
+          style={{ margin: 10 }}
+          mode='contained'
+          onPress={() => navigation.navigate('Preview')}
+        >
+          Preview
+        </Button>
+      </ScrollView>
       <Portal>
-        <FAB.Group
-          open={open}
-          icon={open ? 'close' : 'pencil'}
-          actions={[
-            {
-              icon: 'delete',
-              label: 'Clear',
-              onPress: () => setQuestions([]),
-            },
-            {
-              icon: 'check',
-              label: 'Confirm',
-              onPress: () => console.log('Pressed notifications'),
-            },
-          ]}
-          onStateChange={({ open }) => setOpen(open)}
-        />
+        <FAB style={styles.fab} icon='plus' onPress={() => sheetRef.current.snapTo(0)} />
       </Portal>
-    </ScrollView>
+      <AddQuestionSheet sheetRef={sheetRef} />
+    </>
   )
 }
 
@@ -55,6 +41,12 @@ const styles = StyleSheet.create({
   container: {
     minHeight: '100%',
     backgroundColor: '#fefefe',
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 })
 
