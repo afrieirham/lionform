@@ -11,7 +11,7 @@ import BottomSheetBehavior from 'reanimated-bottom-sheet'
 function AddQuestionSheet({ sheetRef }) {
   const dispatch = useDispatch()
   const [text, setText] = useState('')
-  const [entryType, setEntryType] = useState('text')
+  const [type, setType] = useState('text')
 
   const [showDropDown, setShowDropDown] = useState(false)
 
@@ -23,8 +23,14 @@ function AddQuestionSheet({ sheetRef }) {
   ]
 
   const onAddQuestion = () => {
+    // Close botton sheet
     sheetRef.current.snapTo(1)
-    dispatch(addQuestion({ type: entryType, text }))
+
+    // Reset form
+    setText('')
+    setType('text')
+
+    dispatch(addQuestion({ type, text }))
   }
 
   const renderForm = () => (
@@ -46,8 +52,8 @@ function AddQuestionSheet({ sheetRef }) {
       <DropDown
         label='Type'
         mode='outlined'
-        value={entryType}
-        setValue={setEntryType}
+        value={type}
+        setValue={setType}
         list={questionTypeList}
         visible={showDropDown}
         showDropDown={() => setShowDropDown(true)}
