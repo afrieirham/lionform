@@ -4,13 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import { Provider as StoreProvider } from 'react-redux'
 
 import { StyleSheet } from 'react-native'
-import {
-  BottomNavigation,
-  Portal,
-  Provider as PaperProvider,
-  Surface,
-  Text,
-} from 'react-native-paper'
+import { BottomNavigation, Provider as PaperProvider } from 'react-native-paper'
 
 import { store } from './libs/redux'
 import Builder from './screens/Builder'
