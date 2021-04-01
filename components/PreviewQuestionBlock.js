@@ -8,20 +8,43 @@ function PreviewQuestionBlock({ id, text, type }) {
 
   const renderInput = () => {
     if (type === 'text') {
-      return <TextInput />
+      return (
+        <View style={{ padding: 10 }}>
+          <Text style={{ marginBottom: 10 }}>{text}</Text>
+          <TextInput />
+        </View>
+      )
     }
 
     if (type === 'number') {
-      return <TextInput keyboardType='numeric' />
+      return (
+        <View style={{ padding: 10 }}>
+          <Text style={{ marginBottom: 10 }}>{text}</Text>
+          <TextInput keyboardType='numeric' />
+        </View>
+      )
     }
 
     if (type === 'boolean') {
-      return <Switch value={checked} onValueChange={setChecked} />
+      return (
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 10,
+          }}
+        >
+          <Text style={{ marginRight: 10, width: '80%' }}>{text}</Text>
+          <Switch value={checked} onValueChange={setChecked} />
+        </View>
+      )
     }
 
-    if (type === 'checkboxes') {
+    if (type === 'checkbox') {
       return (
-        <Checkbox
+        <Checkbox.Item
+          label={text}
           status={checked ? 'checked' : 'unchecked'}
           onPress={() => {
             setChecked(!checked)
@@ -35,7 +58,6 @@ function PreviewQuestionBlock({ id, text, type }) {
 
   return (
     <Surface style={styles.surface}>
-      <Title>{text}</Title>
       <View>{renderInput()}</View>
     </Surface>
   )
@@ -44,12 +66,10 @@ function PreviewQuestionBlock({ id, text, type }) {
 const styles = StyleSheet.create({
   surface: {
     padding: 8,
-    height: 80,
     width: '100%',
     elevation: 0,
     borderBottomWidth: 1,
     borderBottomColor: '#e3e3e3',
-    marginVertical: 10,
   },
 })
 

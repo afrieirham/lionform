@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { StyleSheet, View } from 'react-native'
-import { IconButton, Menu, Surface, Text, Title } from 'react-native-paper'
+import { IconButton, List, Menu, Surface, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { removeQuestion } from '../libs/redux'
 
@@ -12,11 +12,30 @@ function QuestionBlock({ id, type, text }) {
   const openMenu = () => setVisible(true)
   const closeMenu = () => setVisible(false)
 
+  const getTypeIcon = () => {
+    if (type === 'text') {
+      return <List.Icon icon='text' />
+    }
+    if (type === 'number') {
+      return <List.Icon icon='numeric' />
+    }
+    if (type === 'boolean') {
+      return <List.Icon icon='toggle-switch-outline' />
+    }
+    if (type === 'checkbox') {
+      return <List.Icon icon='checkbox-marked-outline' />
+    }
+
+    return <Text>N/A</Text>
+  }
+
   return (
     <Surface style={styles.surface}>
-      <View>
-        <Title>{text}</Title>
-        <Text>{type}</Text>
+      <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+        {getTypeIcon()}
+        <Text numberOfLines={2} style={{ maxWidth: '73%' }}>
+          {text}
+        </Text>
       </View>
       <View>
         <Menu
@@ -39,7 +58,6 @@ const styles = StyleSheet.create({
   surface: {
     paddingVertical: 8,
     paddingHorizontal: 10,
-    height: 80,
     width: '100%',
     elevation: 0,
     borderBottomWidth: 1,
