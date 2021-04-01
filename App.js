@@ -13,7 +13,6 @@ import {
 } from 'react-native-paper'
 
 import { store } from './libs/redux'
-import Header from './components/Header'
 import Builder from './screens/Builder'
 import Preview from './screens/Preview'
 
