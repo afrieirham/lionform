@@ -1,5 +1,16 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit'
-import { nanoid } from 'nanoid/non-secure'
+import { createSlice, configureStore, createAsyncThunk } from '@reduxjs/toolkit'
+import * as SecureStore from 'expo-secure-store'
+
+export const setIntialState = createAsyncThunk('questions/setIntialState', async () => {
+  const rawQuestions = await SecureStore.getItemAsync('questions')
+
+  return rawQuestions ? JSON.parse(rawQuestions) : []
+})
+
+export const clearQuestions = createAsyncThunk('questions/clearQuestions', async () => {
+  await SecureStore.deleteItemAsync('questions')
+  return []
+})
 
 const counterSlice = createSlice({
   name: 'questions',
@@ -9,8 +20,7 @@ const counterSlice = createSlice({
       reducer: (state, action) => {
         state.push(action.payload)
       },
-      prepare: ({ type, text }) => {
-        const id = nanoid()
+      prepare: ({ id, type, text }) => {
         return { payload: { id, type, text } }
       },
     },
@@ -22,7 +32,12 @@ const counterSlice = createSlice({
         return { payload: { id } }
       },
     },
-    clearQuestions: (state) => {
+  },
+  extraReducers: {
+    [setIntialState.fulfilled]: (state, action) => {
+      return (state = action.payload)
+    },
+    [clearQuestions.fulfilled]: (state) => {
       return (state = [])
     },
   },
@@ -33,5 +48,5 @@ const store = configureStore({
   devTools: true,
 })
 
-export const { clearQuestions, addQuestion, removeQuestion } = counterSlice.actions
+export const { addQuestion, removeQuestion } = counterSlice.actions
 export { store }

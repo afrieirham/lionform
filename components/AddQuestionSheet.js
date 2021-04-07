@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useForm, Controller } from 'react-hook-form'
+import { nanoid } from 'nanoid/non-secure'
+import * as SecureStore from 'expo-secure-store'
 
 import { StyleSheet, View } from 'react-native'
 import { Button, HelperText, TextInput, Title } from 'react-native-paper'
@@ -17,6 +19,8 @@ function AddQuestionSheet({ sheetRef }) {
 
   const { control, handleSubmit, errors, setValue } = useForm()
 
+  const questions = useSelector((state) => state)
+
   const questionTypeList = [
     { label: 'Text', value: 'text' },
     { label: 'Number', value: 'number' },
@@ -24,7 +28,7 @@ function AddQuestionSheet({ sheetRef }) {
     { label: 'Checkbox', value: 'checkbox' },
   ]
 
-  const onAddQuestion = ({ text }) => {
+  const onAddQuestion = async ({ text }) => {
     // Close botton sheet
     sheetRef.current.snapTo(1)
 
@@ -32,7 +36,14 @@ function AddQuestionSheet({ sheetRef }) {
     setValue('text', '')
     setType('text')
 
-    dispatch(addQuestion({ type, text }))
+    const newQuestion = {
+      id: nanoid(),
+      type,
+      text,
+    }
+
+    dispatch(addQuestion(newQuestion))
+    await SecureStore.setItemAsync('questions', JSON.stringify([...questions, newQuestion]))
   }
 
   const renderForm = () => (

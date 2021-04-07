@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { ScrollView, StyleSheet, View } from 'react-native'
@@ -7,7 +7,7 @@ import { Button, FAB, Portal } from 'react-native-paper'
 import ChuckNorrisJoke from '../components/ChuckNorrisJoke'
 import AddQuestionSheet from '../components/AddQuestionSheet'
 import QuestionBlock from '../components/QuestionBlock'
-import { clearQuestions } from '../libs/redux'
+import { clearQuestions, setIntialState } from '../libs/redux'
 
 function Builder({ navigation }) {
   const sheetRef = useRef(null)
@@ -15,6 +15,10 @@ function Builder({ navigation }) {
 
   const questions = useSelector((state) => state)
   const hasQuestions = Boolean(questions.length)
+
+  useEffect(() => {
+    dispatch(setIntialState())
+  }, [dispatch])
 
   return (
     <>
